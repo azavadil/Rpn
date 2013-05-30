@@ -1,0 +1,16 @@
+//
+//  RpnBrain.h
+//  Rpn
+//
+//  Created by athony on 5/29/13.
+//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface RpnBrain : NSObject
+
+- (void)pushOperand:(double)operand; 
+- (double)performOperation:(NSString*)operation; 
+
+@end

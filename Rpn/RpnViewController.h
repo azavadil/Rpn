@@ -10,4 +10,7 @@
 
 @interface RpnViewController : UIViewController
 
+//IBOutlet is typedef to 'nothing'
+@property (weak, nonatomic) IBOutlet UILabel *display;
+
 @end
