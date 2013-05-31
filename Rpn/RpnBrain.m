@@ -23,12 +23,20 @@
     return _programStack; 
 }
 
+
 - (void)pushOperand:(double)operand
 {
     [self.programStack addObject:[NSNumber numberWithDouble:operand]]; 
  
 }
 
+- (void)pushVariable:(NSString*)variable
+{
+    [self.programStack addObject:variable]; 
+    
+}
+
+/* performOperation */ 
 - (double)performOperation:(NSString*)operation
 {
     
@@ -36,83 +44,107 @@
     return [RpnBrain runProgram:self.program]; 
 }
 
+
+/* isTwoOperand */ 
 + (BOOL)isTwoOperand:(NSString *)operation
 { 
     NSSet *operationSet = [NSSet setWithObjects:@"*", @"/", @"+", @"-", nil]; 
     return [operationSet containsObject:operation]; 
 }
 
+/* isOneOperand */ 
 + (BOOL)isOneOperand:(NSString *)operation
 { 
     NSSet *operationSet = [NSSet setWithObjects:@"sqrt", @"sin", @"cos", nil]; 
     return [operationSet containsObject:operation]; 
 }
 
+/* isNoOperand */ 
 + (BOOL)isNoOperand:(NSString *)operation
 { 
     NSSet *operationSet = [NSSet setWithObjects:@"π", nil]; 
     return [operationSet containsObject:operation]; 
 }
 
+/* isOperation */ 
++ (BOOL)isOperation:(NSString*)operation
+{
+    NSSet *varSet = [NSSet setWithObjects:@"*","/",@"+",@"-",@"sin",@"cos",@"sqrt", nil]; 
+    return [varSet containsObject:operation]; 
+}
 
+/* isVariable */ 
++ (BOOL)isVariable:(NSString*)operation
+{
+    NSSet *varSet = [NSSet setWithObjects:@"x",@"a",@"b", nil]; 
+    return [varSet containsObject:operation]; 
+}
+
+/* program */ 
 - (id) program { 
     return [self.programStack copy]; 
 }
 
-+ (NSString *)descriptionOfProgramAux:(id)program accParam:(NSString*)accumulator
+/* descriptionOfTopOfStack */ 
++ (NSString *)descriptionOfTopOfStack:(id)program 
 {
-    if ([program count] == 0) {
-        return accumulator; 
-    } else { 
-        id topOfStack = [program lastObject]; 
-        [program removeLastObject]; 
-        if([self isTwoOperand:topOfStack])
-        {   
-            NSAssert( [program count] > 1, @"program should have at least 2 operands"); 
-            double arg1 = [[program lastObject] doubleValue]; 
-            double arg2 = [[program lastObject] doubleValue]; 
-            [program removeLastObject]; 
-            [program removeLastObject]; 
-            accumulator = [accumulator stringByAppendingString:[NSString stringWithFormat:@"%@ %@ %@",arg1, topOfStack, arg2]]; 
-            [self descriptionOfProgramAux:program accParam:accumulator]; 
-        } 
-        else if([self isOneOperand:topOfStack])
-        { 
-            NSAssert( [program count] > 0, @"program should have at least 1 operands") ; 
-            double arg1 = [[program lastObject] doubleValue];
-            [program removeLastObject]; 
-            accumulator = [accumulator stringByAppendingString:[NSString stringWithFormat:@"%@(%@)",arg1, topOfStack]];
-            [self descriptionOfProgramAux:program accParam:accumulator]; 
-        }  
-        else if([self isNoOperand:topOfStack]){ 
-            accumulator = [accumulator stringByAppendingString:[NSString stringWithFormat:@"%@ ",topOfStack]];
-            [self descriptionOfProgramAux:program accParam:accumulator]; 
-        } 
+    NSString *result = @""; 
+    
+    id topOfStack = [program lastObject]; 
+    if(topOfStack) [program removeLastObject];
+    
+    if([self isTwoOperand:topOfStack])
+    {   
+        NSAssert( [program count] > 1, @"program should have at least 2 operands"); 
+        result = [NSString stringWithFormat:@"(%@ %@ %@)",[self descriptionOfTopOfStack:program], 
+                                                        topOfStack, 
+                                                        [self descriptionOfTopOfStack:program]]; 
+    } 
+    else if([self isOneOperand:topOfStack])
+    { 
+        NSAssert( [program count] > 0, @"program should have at least 1 operand") ; 
+        result = [NSString stringWithFormat:@"%@(%@)",topOfStack, [self descriptionOfTopOfStack:program]];
+    }  
+    else if([self isNoOperand:topOfStack]){ 
+        result = [NSString stringWithFormat:@"%@",topOfStack];
+    } 
+    else if([self isVariable:topOfStack])
+    { 
+        result = [NSString stringWithFormat:@"%@ ",topOfStack];  
     }
+    else if([topOfStack isKindOfClass:[NSNumber class]])
+    { 
+        result = [NSString stringWithFormat:@"%@", topOfStack]; 
+    }
+                  
+    return result;     
 }
 
+/* descriptionOfProgram */ 
 + (NSString *)descriptionOfProgram:(id)program
 {
     NSMutableArray *stack;
     NSString *result; 
     if ([program isKindOfClass:[NSArray class]]) { 
         stack = [program mutableCopy]; 
-        result = [self descriptionOfProgramAux:stack accParam:@""];    
+        result = [self descriptionOfTopOfStack:stack];    
     }
     return result; 
     
 }
 
+/* clearProgramStack */
 -(void) clearProgramStack 
 {
     [self.programStack removeAllObjects]; 
 }
 
-/* This is a class method. the self in [self popOperandOffStack:stack]
+/* popUnknownOffStack
+ * This is a class method. the self in [self popOperandOffStack:stack]
  * is a class
  */ 
 
-+ (double)popOperandOffStack:(NSMutableArray*)stack
++ (double)popTopOffStack:(NSMutableArray*)stack
 {
     /* 1. id because the item could be number or string (*,/,+ ...)
      */ 
@@ -133,24 +165,24 @@
         
         if([operation isEqualToString:@"*"])  
         { 
-            result = [self popOperandOffStack:stack] * [self popOperandOffStack:stack]; 
+            result = [self popTopOffStack:stack] * [self popTopOffStack:stack]; 
         }
         else if([operation isEqualToString:@"+"])  
         { 
-            result = [self popOperandOffStack:stack] + [self popOperandOffStack:stack]; 
+            result = [self popTopOffStack:stack] + [self popTopOffStack:stack]; 
         }
         else if([operation isEqualToString:@"-"])  
         { 
-            result = [self popOperandOffStack:stack] - [self popOperandOffStack:stack]; 
+            result = [self popTopOffStack:stack] - [self popTopOffStack:stack]; 
         }
         else if ([operation isEqualToString:@"/"]) 
         {
-            double divisor = [self popOperandOffStack:stack]; 
-            if(divisor) result = [self popOperandOffStack:stack] / divisor; 
+            double divisor = [self popTopOffStack:stack]; 
+            if(divisor) result = [self popTopOffStack:stack] / divisor; 
         } 
         else if([operation isEqualToString:@"sqrt"])  
         { 
-            result = sqrt([self popOperandOffStack:stack]); 
+            result = sqrt([self popTopOffStack:stack]); 
         }
 
         else if([operation isEqualToString:@"π"])  
@@ -159,23 +191,15 @@
         }
         else if([operation isEqualToString:@"cos"])  
         { 
-            result = cos([self popOperandOffStack:stack]); 
+            result = cos([self popTopOffStack:stack]); 
         }
         else if([operation isEqualToString:@"sin"])  
         { 
-            result = sin([self popOperandOffStack:stack]); 
-        }
-        else if([operation isEqualToString:@"e"])  
-        { 
-            result = M_E; 
-        }
-        else if([operation isEqualToString:@"log"])  
-        { 
-            result = log([self popOperandOffStack:stack]); 
+            result = sin([self popTopOffStack:stack]); 
         }
         else if([operation isEqualToString:@"+/-"])  
         { 
-            result = -[self popOperandOffStack:stack]; 
+            result = -[self popTopOffStack:stack]; 
         }
         else if([operation isEqualToString:@"C"])  
         { 
@@ -188,6 +212,10 @@
     return result; 
 
 }
+
+
+/* CLASS METHODS */
+
 
 
 + (double)runProgram:(id)program 
@@ -204,8 +232,32 @@
     if([program isKindOfClass:[NSArray class]]){ 
         stack = [program mutableCopy];          //2.
     }
-    return [self popOperandOffStack:stack];     //3. 
+    return [self popTopOffStack:stack];     //3. 
 }
 
-
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
+{
+    
+    NSAssert([program isKindOfClass:[NSArray class]], @"invalid input for runProgram. program must be array"); 
+    
+    program = [program mutableCopy]; 
+    
+    //iterate through program and replace variables with values
+    int count = [program count]; 
+    id currObj; 
+    for (int i = 0; i < count; i++){ 
+        currObj = [program objectAtIndex:i]; 
+        if([self isVariable:currObj]){ 
+            if([variableValues objectForKey:currObj]) {  
+                [program replaceObjectAtIndex:i withObject:[variableValues objectForKey:currObj]]; 
+            } else { 
+                [program replaceObjectAtIndex:i withObject:[NSNumber numberWithDouble:0]]; 
+            }
+        }
+    }
+    
+    return [self runProgram: program]; 
+}
+        
+         
 @end

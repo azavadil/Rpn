@@ -20,8 +20,8 @@
 
 @synthesize display = _display; 
 @synthesize stackDisplay = _stackDisplay;
-@synthesize userIsInTheMiddleOfEnteringANumber = 
-    _userIsInTheMiddleOfEnteringANumber; 
+@synthesize variableDisplay = _variableDisplay;
+@synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber; 
 @synthesize stackDisplayWaitingForOperation = _stackDisplayWaitingForOperation; 
 @synthesize brain = _brain; 
 @synthesize notFirstUseOfStackDisplay = _notFirstUseOfStackDisplay; 
@@ -45,31 +45,12 @@
     return !([unknownOperation isEqualToString:@"π"] || [unknownOperation isEqualToString:@"e"]); 
 }
 
-- (void) updateStackLabel:(NSString*)operationType
+- (void) updateStackDisplay
 { 
-    NSString *newProgram; 
-    if (self.notFirstUseOfStackDisplay){ 
-         newProgram = [self.stackDisplay.text stringByAppendingString:self.display.text];
-    } else { 
-        if ([self.display.text isEqualToString:@"0"]){
-            newProgram = @"";
-        } else { 
-            newProgram = self.display.text; 
-        }
-        self.notFirstUseOfStackDisplay = YES; 
-    }
-        
-    if (operationType && [self notEorPi:operationType])                                                    
-    { 
-        self.stackDisplay.text = [NSString stringWithFormat:@"%@ %@ ",self.stackDisplay.text, operationType];
-        self.stackDisplayWaitingForOperation = NO; 
-    }
-    else
-    {
-        self.stackDisplay.text = [NSString stringWithFormat:@"%@ ", newProgram];
-        self.stackDisplayWaitingForOperation = YES; 
-    }
+    self.stackDisplay.text = [RpnBrain descriptionOfProgram:self.brain.program];     
+    
 }
+
 
 - (IBAction)digitPressed:(UIButton*)sender {
     
@@ -88,7 +69,7 @@
     
     [self.brain pushOperand:[self.display.text doubleValue]]; 
     self.userIsInTheMiddleOfEnteringANumber = NO; 
-    [self updateStackLabel:nil];
+    [self updateStackDisplay];
 
 }
 
@@ -104,7 +85,7 @@
     } 
     
     if(self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
-    [self updateStackLabel:sender.currentTitle];
+    [self updateStackDisplay];
 
     double result = [self.brain performOperation:sender.currentTitle]; 
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
@@ -113,7 +94,18 @@
 
 }
 
-
-
+- (IBAction)variablePressed:(id)sender {
+    
+    NSString *variable = [sender currentTitle]; 
+    if(self.userIsInTheMiddleOfEnteringANumber)
+    {
+        [self enterPressed]; 
+    } else 
+    { 
+        [self.brain pushVariable:variable]; 
+        
+    }
+    
+}
 
 @end
