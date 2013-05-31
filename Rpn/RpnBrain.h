@@ -22,6 +22,7 @@
 //eval the top item on stack
 + (double)runProgram:(id)program; 
 + (NSString *)descriptionOfProgram:(id)program; 
++ (NSSet *)variablesUsedInProgram:(id)program; 
 
 
 @end

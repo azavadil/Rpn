@@ -51,6 +51,16 @@
     
 }
 
+- (void) updateVariableDisplay
+{
+    NSString *result; 
+    for (NSString *variable in [RpnBrain variablesUsedInProgram:self.brain.program]){ 
+        NSString *temp = [NSString stringWithFormat:@"%@ = %@ ", variable,10];
+        result = [result stringByAppendingString:temp]; 
+    }
+    self.variableDisplay.text = result; 
+}
+
 
 - (IBAction)digitPressed:(UIButton*)sender {
     

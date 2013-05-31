@@ -10,19 +10,20 @@
 
 @interface RpnBrain()
 @property (nonatomic, strong) NSMutableArray *programStack; 
-@property (nonatomic,strong) NSNumber *varA; 
-@property (nonatomic,strong) NSNumber *varB; 
-@property (nonatomic,strong) NSNumber *varX; 
+@property (nonatomic,strong) NSDictionary *variableDictionary; 
 @end
 
 
 @implementation RpnBrain
 
 @synthesize programStack = _programStack; 
-@synthesize varA = _varA;
-@synthesize varB = _varB;
-@synthesize varX = _varX; 
+@synthesize variableDictionary = _variableDictionary;
 
+- (NSDictionary*)variableDictionary
+{
+    if(_variableDictionary == nil) _variableDictionary =[[NSMutableDictionary alloc] init]; 
+    return _variableDictionary; 
+}
 
 - (NSMutableArray*)programStack
 { 
@@ -48,21 +49,25 @@
     //implement: set variable values
     if([test isEqualToString:@"TestA"])
     { 
-        self.varA = [NSNumber numberWithDouble:10]; 
-        self.varB = [NSNumber numberWithDouble:20]; 
-        self.varX = [NSNumber numberWithDouble:30]; 
+        self.variableDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [NSNumber numberWithDouble:10],@"a", 
+                                   [NSNumber numberWithDouble:20], @"b", 
+                                   [NSNumber numberWithDouble:30], @"x", nil]; 
     }
     else if([test isEqualToString:@"TestB"])
     {
-        self.varA = [NSNumber numberWithDouble:2]; 
-        self.varB = [NSNumber numberWithDouble:4]; 
-        self.varX = [NSNumber numberWithDouble:6]; 
+        self.variableDictionary =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [NSNumber numberWithDouble:2], @"a", 
+                                   [NSNumber numberWithDouble:4], @"b", 
+                                    [NSNumber numberWithDouble:6], @"x",nil];
     }
     else if([test isEqualToString:@"TestX"])
     {
-        self.varA = nil;
-        self.varB = nil;
-        self.varX = nil;
+        self.variableDictionary =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNull null], @"a", 
+                                    [NSNull null], @"b", 
+                                    [NSNull null], @"x",nil];
+
     }
     
 }
@@ -294,6 +299,20 @@
     
     return [self runProgram: program]; 
 }
-        
+  
++ (NSSet *)variablesUsedInProgram:(id) program
+{ 
+    NSMutableSet *result; 
+    if([program isKindOfClass:[NSArray class]]) {
+        for(id obj in program) {
+            if([obj isKindOfClass:[NSString class]]){ 
+                if([RpnBrain isVariable:obj]){ 
+                    [result addObject:obj]; 
+                }
+            }
+        }
+    }
+    return result; 
+}
          
 @end
