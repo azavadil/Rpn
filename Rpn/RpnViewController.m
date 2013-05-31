@@ -85,26 +85,18 @@
     } 
     
     if(self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
-    [self updateStackDisplay];
-
-    double result = [self.brain performOperation:sender.currentTitle]; 
-    NSString *resultString = [NSString stringWithFormat:@"%g", result];
-    self.display.text = resultString; 
     
+    double result = [self.brain performOperation:sender.currentTitle]; 
+    self.display.text = [NSString stringWithFormat:@"%g", result]; 
+    [self updateStackDisplay];
 
 }
 
-- (IBAction)variablePressed:(id)sender {
     
-    NSString *variable = [sender currentTitle]; 
-    if(self.userIsInTheMiddleOfEnteringANumber)
-    {
-        [self enterPressed]; 
-    } else 
-    { 
-        [self.brain pushVariable:variable]; 
-        
-    }
+
+- (IBAction)testPressed:(id)sender {
+    
+    [self.brain setTestVariables:[sender currentTitle]]; 
     
 }
 

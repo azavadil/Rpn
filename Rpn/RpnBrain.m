@@ -10,12 +10,19 @@
 
 @interface RpnBrain()
 @property (nonatomic, strong) NSMutableArray *programStack; 
+@property (nonatomic,strong) NSNumber *varA; 
+@property (nonatomic,strong) NSNumber *varB; 
+@property (nonatomic,strong) NSNumber *varX; 
 @end
 
 
 @implementation RpnBrain
 
 @synthesize programStack = _programStack; 
+@synthesize varA = _varA;
+@synthesize varB = _varB;
+@synthesize varX = _varX; 
+
 
 - (NSMutableArray*)programStack
 { 
@@ -35,6 +42,31 @@
     [self.programStack addObject:variable]; 
     
 }
+
+- (void)setTestVariables:(NSString*)test
+{
+    //implement: set variable values
+    if([test isEqualToString:@"TestA"])
+    { 
+        self.varA = [NSNumber numberWithDouble:10]; 
+        self.varB = [NSNumber numberWithDouble:20]; 
+        self.varX = [NSNumber numberWithDouble:30]; 
+    }
+    else if([test isEqualToString:@"TestB"])
+    {
+        self.varA = [NSNumber numberWithDouble:2]; 
+        self.varB = [NSNumber numberWithDouble:4]; 
+        self.varX = [NSNumber numberWithDouble:6]; 
+    }
+    else if([test isEqualToString:@"TestX"])
+    {
+        self.varA = nil;
+        self.varB = nil;
+        self.varX = nil;
+    }
+    
+}
+
 
 /* performOperation */ 
 - (double)performOperation:(NSString*)operation
@@ -96,9 +128,10 @@
     if([self isTwoOperand:topOfStack])
     {   
         NSAssert( [program count] > 1, @"program should have at least 2 operands"); 
+        NSString *firstInDisplay = [self descriptionOfTopOfStack:program]; 
         result = [NSString stringWithFormat:@"(%@ %@ %@)",[self descriptionOfTopOfStack:program], 
                                                         topOfStack, 
-                                                        [self descriptionOfTopOfStack:program]]; 
+                                                           firstInDisplay]; 
     } 
     else if([self isOneOperand:topOfStack])
     { 
@@ -116,21 +149,27 @@
     { 
         result = [NSString stringWithFormat:@"%@", topOfStack]; 
     }
-                  
-    return result;     
+    else if([self isVariable:topOfStack]){ 
+        result = topOfStack; 
+    }
+        
+    return result; 
+   
 }
 
 /* descriptionOfProgram */ 
 + (NSString *)descriptionOfProgram:(id)program
 {
     NSMutableArray *stack;
-    NSString *result; 
     if ([program isKindOfClass:[NSArray class]]) { 
         stack = [program mutableCopy]; 
-        result = [self descriptionOfTopOfStack:stack];    
+    }
+
+    NSString *result = [self descriptionOfTopOfStack:stack];  
+    while([stack count] > 0){ 
+        result = [NSString stringWithFormat:@"%@, %@", result, [self descriptionOfTopOfStack:stack]]; 
     }
     return result; 
-    
 }
 
 /* clearProgramStack */

@@ -12,6 +12,7 @@
 
 - (void)pushOperand:(double)operand; 
 - (void)pushVariable:(NSString*)variable; 
+- (void)setTestVariables:(NSString*)test;  
 - (double)performOperation:(NSString*)operation; 
 - (void) clearProgramStack;
 
