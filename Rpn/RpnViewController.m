@@ -114,8 +114,6 @@
 }
 
 
-- (void)viewDidUnload {
-    [self setStackDisplay:nil];
-    [super viewDidUnload];
-}
+
+
 @end

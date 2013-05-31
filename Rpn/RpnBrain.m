@@ -36,13 +36,71 @@
     return [RpnBrain runProgram:self.program]; 
 }
 
++ (BOOL)isTwoOperand:(NSString *)operation
+{ 
+    NSSet *operationSet = [NSSet setWithObjects:@"*", @"/", @"+", @"-", nil]; 
+    return [operationSet containsObject:operation]; 
+}
+
++ (BOOL)isOneOperand:(NSString *)operation
+{ 
+    NSSet *operationSet = [NSSet setWithObjects:@"sqrt", @"sin", @"cos", nil]; 
+    return [operationSet containsObject:operation]; 
+}
+
++ (BOOL)isNoOperand:(NSString *)operation
+{ 
+    NSSet *operationSet = [NSSet setWithObjects:@"π", nil]; 
+    return [operationSet containsObject:operation]; 
+}
+
+
 - (id) program { 
     return [self.programStack copy]; 
 }
 
++ (NSString *)descriptionOfProgramAux:(id)program accParam:(NSString*)accumulator
+{
+    if ([program count] == 0) {
+        return accumulator; 
+    } else { 
+        id topOfStack = [program lastObject]; 
+        [program removeLastObject]; 
+        if([self isTwoOperand:topOfStack])
+        {   
+            NSAssert( [program count] > 1, @"program should have at least 2 operands"); 
+            double arg1 = [[program lastObject] doubleValue]; 
+            double arg2 = [[program lastObject] doubleValue]; 
+            [program removeLastObject]; 
+            [program removeLastObject]; 
+            accumulator = [accumulator stringByAppendingString:[NSString stringWithFormat:@"%@ %@ %@",arg1, topOfStack, arg2]]; 
+            [self descriptionOfProgramAux:program accParam:accumulator]; 
+        } 
+        else if([self isOneOperand:topOfStack])
+        { 
+            NSAssert( [program count] > 0, @"program should have at least 1 operands") ; 
+            double arg1 = [[program lastObject] doubleValue];
+            [program removeLastObject]; 
+            accumulator = [accumulator stringByAppendingString:[NSString stringWithFormat:@"%@(%@)",arg1, topOfStack]];
+            [self descriptionOfProgramAux:program accParam:accumulator]; 
+        }  
+        else if([self isNoOperand:topOfStack]){ 
+            accumulator = [accumulator stringByAppendingString:[NSString stringWithFormat:@"%@ ",topOfStack]];
+            [self descriptionOfProgramAux:program accParam:accumulator]; 
+        } 
+    }
+}
+
 + (NSString *)descriptionOfProgram:(id)program
 {
-    return @"implement this in assignment 2"; 
+    NSMutableArray *stack;
+    NSString *result; 
+    if ([program isKindOfClass:[NSArray class]]) { 
+        stack = [program mutableCopy]; 
+        result = [self descriptionOfProgramAux:stack accParam:@""];    
+    }
+    return result; 
+    
 }
 
 -(void) clearProgramStack 
@@ -142,11 +200,11 @@
      *    pops top items of stack and returns the items
      */
     
-    NSMutableArray *stack;   //1.autoset to nil
+    NSMutableArray *stack;                      //1.autoset to nil
     if([program isKindOfClass:[NSArray class]]){ 
-        stack = [program mutableCopy];        //2.
+        stack = [program mutableCopy];          //2.
     }
-    return [self popOperandOffStack:stack];  //3. 
+    return [self popOperandOffStack:stack];     //3. 
 }
 
 
