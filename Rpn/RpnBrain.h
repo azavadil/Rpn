@@ -12,5 +12,14 @@
 
 - (void)pushOperand:(double)operand; 
 - (double)performOperation:(NSString*)operation; 
+-(void) clearProgramStack;
+
+@property (readonly) id program;
+
+
+//eval the top item on stack
++ (double)runProgram:(id)program; 
++ (NSString *)descriptionOfProgram:(id)program; 
+
 
 @end
