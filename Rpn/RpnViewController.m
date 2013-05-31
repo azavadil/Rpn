@@ -66,8 +66,9 @@
 }
 
 - (IBAction)enterPressed {
-    
-    [self.brain pushOperand:[self.display.text doubleValue]]; 
+    if(self.userIsInTheMiddleOfEnteringANumber) {
+        [self.brain pushOperand:[self.display.text doubleValue]];
+    }
     self.userIsInTheMiddleOfEnteringANumber = NO; 
     [self updateStackDisplay];
 
@@ -92,11 +93,16 @@
 
 }
 
+- (IBAction)variablePressed:(id)sender {
+    if(self.userIsInTheMiddleOfEnteringANumber) [self enterPressed]; 
+    [self.brain pushVariable:[sender currentTitle]]; 
+}
     
 
 - (IBAction)testPressed:(id)sender {
     
     [self.brain setTestVariables:[sender currentTitle]]; 
+    [self updateStackDisplay]; 
     
 }
 

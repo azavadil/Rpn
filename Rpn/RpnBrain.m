@@ -128,10 +128,10 @@
     if([self isTwoOperand:topOfStack])
     {   
         NSAssert( [program count] > 1, @"program should have at least 2 operands"); 
-        NSString *firstInDisplay = [self descriptionOfTopOfStack:program]; 
+        NSString *backInDisplay = [self descriptionOfTopOfStack:program]; 
         result = [NSString stringWithFormat:@"(%@ %@ %@)",[self descriptionOfTopOfStack:program], 
-                                                        topOfStack, 
-                                                           firstInDisplay]; 
+                                                           topOfStack, 
+                                                           backInDisplay]; 
     } 
     else if([self isOneOperand:topOfStack])
     { 
@@ -141,10 +141,6 @@
     else if([self isNoOperand:topOfStack]){ 
         result = [NSString stringWithFormat:@"%@",topOfStack];
     } 
-    else if([self isVariable:topOfStack])
-    { 
-        result = [NSString stringWithFormat:@"%@ ",topOfStack];  
-    }
     else if([topOfStack isKindOfClass:[NSNumber class]])
     { 
         result = [NSString stringWithFormat:@"%@", topOfStack]; 
@@ -164,8 +160,9 @@
     if ([program isKindOfClass:[NSArray class]]) { 
         stack = [program mutableCopy]; 
     }
-
-    NSString *result = [self descriptionOfTopOfStack:stack];  
+    
+    NSString *result; 
+    result = [self descriptionOfTopOfStack:stack];  
     while([stack count] > 0){ 
         result = [NSString stringWithFormat:@"%@, %@", result, [self descriptionOfTopOfStack:stack]]; 
     }
