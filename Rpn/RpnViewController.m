@@ -14,6 +14,8 @@
 @property (nonatomic) BOOL stackDisplayWaitingForOperation; 
 @property (nonatomic) BOOL notFirstUseOfStackDisplay; 
 @property (nonatomic, strong) RpnBrain *brain; 
+@property (nonatomic,strong) NSDictionary *variableDictionary; 
+- (void)setTestVariables:(NSString*)test;  
 @end
 
 @implementation RpnViewController
@@ -25,11 +27,19 @@
 @synthesize stackDisplayWaitingForOperation = _stackDisplayWaitingForOperation; 
 @synthesize brain = _brain; 
 @synthesize notFirstUseOfStackDisplay = _notFirstUseOfStackDisplay; 
+@synthesize variableDictionary = _variableDictionary;
 
 - (RpnBrain*)brain { 
     if(_brain == nil) _brain = [[RpnBrain alloc] init]; 
     return _brain; 
 }
+
+- (NSDictionary*)variableDictionary
+{
+    if(_variableDictionary == nil) _variableDictionary =[[NSMutableDictionary alloc] init]; 
+    return _variableDictionary; 
+}
+
 
 - (BOOL) containsDecimalPoint:(NSString *)digitsSoFar
 {
@@ -53,12 +63,39 @@
 
 - (void) updateVariableDisplay
 {
-    NSString *result; 
-    for (NSString *variable in [RpnBrain variablesUsedInProgram:self.brain.program]){ 
-        NSString *temp = [NSString stringWithFormat:@"%@ = %@ ", variable,10];
+    NSString *result = @""; 
+    for (NSString *key in [self.variableDictionary keyEnumerator]){ 
+        NSString *temp = [NSString stringWithFormat:@"%@ = %@ ", key, [self.variableDictionary valueForKey:key]];
         result = [result stringByAppendingString:temp]; 
     }
     self.variableDisplay.text = result; 
+}
+
+- (void)setTestVariables:(NSString*)test
+{
+    if([test isEqualToString:@"TestA"])
+    { 
+        self.variableDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [NSNumber numberWithDouble:10],@"a", 
+                                   [NSNumber numberWithDouble:20], @"b", 
+                                   [NSNumber numberWithDouble:30], @"x", nil]; 
+    }
+    else if([test isEqualToString:@"TestB"])
+    {
+        self.variableDictionary =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithDouble:2], @"a", 
+                                    [NSNumber numberWithDouble:4], @"b", 
+                                    [NSNumber numberWithDouble:6], @"x",nil];
+    }
+    else if([test isEqualToString:@"TestC"])
+    {
+        self.variableDictionary =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNull null], @"a", 
+                                    [NSNull null], @"b", 
+                                    [NSNull null], @"x",nil];
+        
+    }
+    
 }
 
 
@@ -111,9 +148,8 @@
 
 - (IBAction)testPressed:(id)sender {
     
-    [self.brain setTestVariables:[sender currentTitle]]; 
-    [self updateStackDisplay]; 
-    
+    [self setTestVariables:[sender currentTitle]]; 
+    [self updateVariableDisplay]; 
 }
 
 @end

@@ -10,20 +10,13 @@
 
 @interface RpnBrain()
 @property (nonatomic, strong) NSMutableArray *programStack; 
-@property (nonatomic,strong) NSDictionary *variableDictionary; 
 @end
 
 
 @implementation RpnBrain
 
 @synthesize programStack = _programStack; 
-@synthesize variableDictionary = _variableDictionary;
 
-- (NSDictionary*)variableDictionary
-{
-    if(_variableDictionary == nil) _variableDictionary =[[NSMutableDictionary alloc] init]; 
-    return _variableDictionary; 
-}
 
 - (NSMutableArray*)programStack
 { 
@@ -41,34 +34,6 @@
 - (void)pushVariable:(NSString*)variable
 {
     [self.programStack addObject:variable]; 
-    
-}
-
-- (void)setTestVariables:(NSString*)test
-{
-    //implement: set variable values
-    if([test isEqualToString:@"TestA"])
-    { 
-        self.variableDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [NSNumber numberWithDouble:10],@"a", 
-                                   [NSNumber numberWithDouble:20], @"b", 
-                                   [NSNumber numberWithDouble:30], @"x", nil]; 
-    }
-    else if([test isEqualToString:@"TestB"])
-    {
-        self.variableDictionary =  [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [NSNumber numberWithDouble:2], @"a", 
-                                   [NSNumber numberWithDouble:4], @"b", 
-                                    [NSNumber numberWithDouble:6], @"x",nil];
-    }
-    else if([test isEqualToString:@"TestX"])
-    {
-        self.variableDictionary =  [NSDictionary dictionaryWithObjectsAndKeys:
-                                    [NSNull null], @"a", 
-                                    [NSNull null], @"b", 
-                                    [NSNull null], @"x",nil];
-
-    }
     
 }
 
@@ -302,7 +267,7 @@
   
 + (NSSet *)variablesUsedInProgram:(id) program
 { 
-    NSMutableSet *result; 
+    NSMutableSet *result = [[NSMutableSet alloc] initWithCapacity:3]; 
     if([program isKindOfClass:[NSArray class]]) {
         for(id obj in program) {
             if([obj isKindOfClass:[NSString class]]){ 
@@ -312,7 +277,11 @@
             }
         }
     }
-    return result; 
+    if([result count] > 0){ 
+        return result; 
+    } else { 
+        return nil; 
+    }
 }
          
 @end
