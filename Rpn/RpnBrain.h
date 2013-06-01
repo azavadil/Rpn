@@ -12,14 +12,16 @@
 
 - (void)pushOperand:(double)operand; 
 - (void)pushVariable:(NSString*)variable; 
-- (double)performOperation:(NSString*)operation; 
+- (double)performOperation:(NSString*)operation valParam:(NSDictionary*)valDict; 
+- (double)performOperation:(NSDictionary*)valDict; 
 - (void) clearProgramStack;
+- (void) removeLastItem; 
 
 @property (readonly) id program;
 
 
 //eval the top item on stack
-+ (double)runProgram:(id)program; 
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues; 
 + (NSString *)descriptionOfProgram:(id)program; 
 + (NSSet *)variablesUsedInProgram:(id)program; 
 

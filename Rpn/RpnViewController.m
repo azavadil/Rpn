@@ -128,13 +128,14 @@
         self.stackDisplay.text = @"";
         self.display.text = @"0"; 
         [self.brain clearProgramStack]; 
-        self.notFirstUseOfStackDisplay = NO;  
+        self.notFirstUseOfStackDisplay = NO; 
+        self.userIsInTheMiddleOfEnteringANumber = NO; 
         return; 
     } 
     
     if(self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
     
-    double result = [self.brain performOperation:sender.currentTitle]; 
+    double result = [self.brain performOperation:sender.currentTitle valParam:self.variableDictionary]; 
     self.display.text = [NSString stringWithFormat:@"%g", result]; 
     [self updateStackDisplay];
 
@@ -150,6 +151,19 @@
     
     [self setTestVariables:[sender currentTitle]]; 
     [self updateVariableDisplay]; 
+}
+- (IBAction)undoPressed {
+    if(self.userIsInTheMiddleOfEnteringANumber){ 
+        if([self.display.text length] > 1) {
+            self.display.text = [self.display.text substringToIndex:[self.display.text length]-1]; 
+        } else { 
+            double result = [self.brain performOperation:self.variableDictionary]; 
+            self.display.text = [NSString stringWithFormat:@"%g", result]; 
+            [self updateStackDisplay];
+        }
+    } else { 
+        [self.brain removeLastItem];
+    }
 }
 
 @end

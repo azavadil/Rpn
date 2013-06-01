@@ -37,13 +37,24 @@
     
 }
 
+- (void)removeLastItem
+{
+    id obj = [self.programStack lastObject]; 
+    if(obj) [self.programStack removeLastObject]; 
+}
 
 /* performOperation */ 
-- (double)performOperation:(NSString*)operation
+- (double)performOperation:(NSString*)operation valParam:(NSDictionary *)valDict
 {
     
     [self.programStack addObject:operation]; 
-    return [RpnBrain runProgram:self.program]; 
+    return [RpnBrain runProgram:self.program usingVariableValues:valDict]; 
+}
+
+/* performOperation */ 
+- (double)performOperation:(NSDictionary *)valDict
+{
+    return [RpnBrain runProgram:self.program usingVariableValues:valDict]; 
 }
 
 
