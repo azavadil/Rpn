@@ -8,13 +8,15 @@
 
 #import "RpnViewController.h"
 #import "RpnBrain.h" 
+#import "GraphViewController.h"
 
-@interface RpnViewController()
+@interface RpnViewController() 
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic) BOOL stackDisplayWaitingForOperation; 
 @property (nonatomic) BOOL notFirstUseOfStackDisplay; 
 @property (nonatomic, strong) RpnBrain *brain; 
-@property (nonatomic,strong) NSDictionary *variableDictionary; 
+@property (nonatomic,strong) NSDictionary *variableDictionary;
+
 - (void)setTestVariables:(NSString*)test;  
 @end
 
@@ -33,6 +35,7 @@
     if(_brain == nil) _brain = [[RpnBrain alloc] init]; 
     return _brain; 
 }
+
 
 - (NSDictionary*)variableDictionary
 {
@@ -147,11 +150,7 @@
 }
     
 
-- (IBAction)testPressed:(id)sender {
-    
-    [self setTestVariables:[sender currentTitle]]; 
-    [self updateVariableDisplay]; 
-}
+
 - (IBAction)undoPressed {
     if(self.userIsInTheMiddleOfEnteringANumber){ 
         if([self.display.text length] > 1) {
@@ -164,6 +163,19 @@
     } else { 
         [self.brain removeLastItem];
     }
+}
+
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if([segue.identifier isEqualToString:@"ShowGraph"])
+    {
+        [segue.destinationViewController setCurrProgram:self.brain.program]; 
+    }
+}
+
+- (IBAction)graph {
+    [self performSegueWithIdentifier:@"ShowGraph" sender:self]; 
+    
 }
 
 @end
