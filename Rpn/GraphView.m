@@ -78,41 +78,51 @@
 - (void)drawRect:(CGRect)rect
 {
  
+    CGContextRef context = UIGraphicsGetCurrentContext();
     
+    CGFloat size = self.bounds.size.width; 
+    if (self.bounds.size.height < self.bounds.size.width) size = self.bounds.size.height; 
+    
+    /* If the size is less than the width/height, we want to split the difference
+     * so there's an equal margin on both sides
+     */ 
+    
+    CGPoint drawingAreaOrigin = CGPointMake( (self.bounds.size.width - size) / 2.0, (self.bounds.size.height-size)/ 2.0 ); 
+    CGRect drawingArea = CGRectMake(drawingAreaOrigin.x, drawingAreaOrigin.y , size, size); 
     
     double startOfRange = [self.dataSource startOfRange]; 
     double rangeDistance = [self.dataSource totalRangeDistance]; 
     
-    NSLog(@"rangeDistance = %f, width = %f, height = %f", rangeDistance, self.bounds.size.width, self.bounds.size.height); 
-    
-    
+        
     CGPoint midPoint; 
-    midPoint.x = self.bounds.origin.x + self.bounds.size.width/2.0; 
-    midPoint.y = self.bounds.origin.y + self.bounds.size.height/2.0;
+    midPoint.x = drawingAreaOrigin.x + size/2.0; 
+    midPoint.y = drawingAreaOrigin.y + size/2.0;  
     
-    CGFloat halfHeight = midPoint.y * 1; 
-    
+    size *= self.scale; 
+
     
     double max; 
-    for(int i = 0; i< self.bounds.size.width; i++){ 
-        double scaledX = startOfRange + rangeDistance*(i/self.bounds.size.width); 
+    for(int i = 0; i < size; i++){ 
+        double scaledX = startOfRange + rangeDistance*(i/size); 
         double temp = [self.dataSource yCoordinateForGraphView:scaledX]; 
         if (fabs(temp) > max) max = fabs(temp); 
     }
     
-    CGFloat pointsPerHashmark = self.bounds.size.width / (CGFloat)rangeDistance; 
-    [AxesDrawer drawAxesInRect:self.bounds originAtPoint:midPoint scale:pointsPerHashmark];
+    CGFloat pointsPerHashmark = size / (CGFloat)rangeDistance; 
+    [AxesDrawer drawAxesInRect:drawingArea originAtPoint:midPoint scale:pointsPerHashmark];
     
     
-    CGContextRef context = UIGraphicsGetCurrentContext(); 
+     
     CGContextBeginPath(context); 
-    CGContextMoveToPoint(context, startOfRange, [self.dataSource yCoordinateForGraphView:startOfRange]); //datasource
+    CGContextMoveToPoint(context, midPoint.x - size/2 , midPoint.y - pointsPerHashmark*[self.dataSource yCoordinateForGraphView:startOfRange]); //datasource
     
-    for(int i = 1; i< self.bounds.size.width; i++){
-        double scaledX = startOfRange + rangeDistance*(i/self.bounds.size.width);
+    
+    
+    for(int i = 1; i < size; i++){
+        double scaledX = startOfRange + rangeDistance*(i/size);
         double temp = [self.dataSource yCoordinateForGraphView:scaledX];
      
-        CGContextAddLineToPoint(context, (CGFloat)i, (halfHeight - pointsPerHashmark*(CGFloat)temp)); //datasource
+        CGContextAddLineToPoint(context, midPoint.x - size/2 + (CGFloat)i, (midPoint.y - pointsPerHashmark*(CGFloat)temp)); //datasource
     }
     CGContextDrawPath(context, kCGPathStroke); 
     

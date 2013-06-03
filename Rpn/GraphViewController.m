@@ -50,7 +50,7 @@
 
 
 -(double)yCoordinateForGraphView:(double)xCoordinate
-{s
+{
     NSDictionary *xValue = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:xCoordinate], @"x", nil];
     return [RpnBrain runProgram:self.currProgram usingVariableValues: xValue]; 
     
