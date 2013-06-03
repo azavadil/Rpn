@@ -38,7 +38,11 @@
     
     self.graphView.dataSource = self;
     
-    //implement pinch
+    /* target: the object that implements the gesture. In this example 
+     * the view itself implements the gesture. So target is self.graphView
+     */ 
+    
+    [self.graphView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pinch:)]]; 
     
     //implement pan
 
@@ -46,7 +50,7 @@
 
 
 -(double)yCoordinateForGraphView:(double)xCoordinate
-{
+{s
     NSDictionary *xValue = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:xCoordinate], @"x", nil];
     return [RpnBrain runProgram:self.currProgram usingVariableValues: xValue]; 
     
@@ -67,9 +71,9 @@
     return result; 
 }
 
--(double)endOfRange
+-(double)totalRangeDistance
 {
-    double result = 10; 
+    double result = 20; 
     
     if ([self.currProgram containsObject:@"sin"] ||
              [self.currProgram containsObject:@"cos"])
@@ -84,7 +88,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 @end

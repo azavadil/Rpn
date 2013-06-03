@@ -42,6 +42,16 @@
     
 }
 
+-(void)pinch:(UIPinchGestureRecognizer *)gesture
+{
+    if ((gesture.state == UIGestureRecognizerStateChanged) || 
+        (gesture.state == UIGestureRecognizerStateEnded)) 
+    {
+        self.scale *= gesture.scale; // adjust our scale
+        gesture.scale = 1;           // reset gestures scale to 1 (so future changes are incremental, not cumulative)
+    }
+}
+
 - (void)setup
 { 
     //code required to force view to redraw
@@ -67,29 +77,31 @@
 
 - (void)drawRect:(CGRect)rect
 {
+ 
+    
     
     double startOfRange = [self.dataSource startOfRange]; 
-    double endOfRange = [self.dataSource endOfRange]; 
+    double rangeDistance = [self.dataSource totalRangeDistance]; 
+    
+    NSLog(@"rangeDistance = %f, width = %f, height = %f", rangeDistance, self.bounds.size.width, self.bounds.size.height); 
     
     
     CGPoint midPoint; 
     midPoint.x = self.bounds.origin.x + self.bounds.size.width/2.0; 
-    midPoint.x = self.bounds.origin.y + self.bounds.size.height/2.0;
+    midPoint.y = self.bounds.origin.y + self.bounds.size.height/2.0;
     
-    CGFloat halfOfGraphArea = midPoint.y * self.scale; 
+    CGFloat halfHeight = midPoint.y * 1; 
     
-      
+    
     double max; 
     for(int i = 0; i< self.bounds.size.width; i++){ 
-        double scaledX = startOfRange + endOfRange*(i/self.bounds.size.width); 
+        double scaledX = startOfRange + rangeDistance*(i/self.bounds.size.width); 
         double temp = [self.dataSource yCoordinateForGraphView:scaledX]; 
         if (fabs(temp) > max) max = fabs(temp); 
     }
     
-    
-    CGRect trigRect = CGRectMake(0, 0, endOfRange, 2); 
-    
-    [AxesDrawer drawAxesInRect:trigRect originAtPoint:midPoint scale:0.90];
+    CGFloat pointsPerHashmark = self.bounds.size.width / (CGFloat)rangeDistance; 
+    [AxesDrawer drawAxesInRect:self.bounds originAtPoint:midPoint scale:pointsPerHashmark];
     
     
     CGContextRef context = UIGraphicsGetCurrentContext(); 
@@ -97,11 +109,10 @@
     CGContextMoveToPoint(context, startOfRange, [self.dataSource yCoordinateForGraphView:startOfRange]); //datasource
     
     for(int i = 1; i< self.bounds.size.width; i++){
-        double scaledX = startOfRange + (endOfRange)*(i/self.bounds.size.width);
+        double scaledX = startOfRange + rangeDistance*(i/self.bounds.size.width);
         double temp = [self.dataSource yCoordinateForGraphView:scaledX];
-        CGFloat scaledY = halfOfGraphArea * (CGFloat)temp/max; 
-    
-        CGContextAddLineToPoint(context, i, midPoint.y + scaledY); //datasource
+     
+        CGContextAddLineToPoint(context, (CGFloat)i, (halfHeight - pointsPerHashmark*(CGFloat)temp)); //datasource
     }
     CGContextDrawPath(context, kCGPathStroke); 
     

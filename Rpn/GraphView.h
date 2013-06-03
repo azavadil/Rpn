@@ -14,7 +14,7 @@
 
 -(double)yCoordinateForGraphView:(double)xCoordinate; 
 -(double)startOfRange; 
--(double)endOfRange; 
+-(double)totalRangeDistance; 
 
 @end
 
@@ -24,5 +24,11 @@
 @property (nonatomic, weak) IBOutlet id<GraphViewDataSource>dataSource; 
 
 @property (nonatomic) CGFloat scale; 
+
+/* include in the public API so clients are aware that 
+ * graphView supports pinch recognition
+ */ 
+ 
+- (void)pinch:(UIPinchGestureRecognizer *)gesture; 
 
 @end

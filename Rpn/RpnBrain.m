@@ -116,8 +116,13 @@
     } 
     else if([self isOneOperand:topOfStack])
     { 
-        NSAssert( [program count] > 0, @"program should have at least 1 operand") ; 
-        result = [NSString stringWithFormat:@"%@(%@)",topOfStack, [self descriptionOfTopOfStack:program]];
+        if(!([program count] > 0)) 
+        {
+            result = @"ERROR: program should have at least 1 operand"; 
+        } else 
+        {
+            result = [NSString stringWithFormat:@"%@(%@)",topOfStack, [self descriptionOfTopOfStack:program]];
+        }
     }  
     else if([self isNoOperand:topOfStack]){ 
         result = [NSString stringWithFormat:@"%@",topOfStack];
