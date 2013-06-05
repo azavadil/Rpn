@@ -10,10 +10,13 @@
 #import "GraphView.h" 
 #import "RpnBrain.h" 
 
+
+
 @interface GraphViewController() <GraphViewDataSource> 
 
 // this is how we make outlets
 @property (nonatomic, weak) IBOutlet GraphView *graphView; 
+@property (nonatomic, weak) IBOutlet UIToolbar *toolbar; 
 
 @end
 
@@ -21,6 +24,23 @@
 
 @synthesize graphView = _graphView; 
 @synthesize currProgram = _currProgram; 
+@synthesize splitViewBarButtonItem = _splitViewBarButtonItem; 
+@synthesize toolbar = _toolbar; 
+
+-(void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
+{
+    if(_splitViewBarButtonItem != splitViewBarButtonItem)
+    {
+        NSMutableArray *toolbarItems = [self.toolbar.items mutableCopy]; 
+        if(_splitViewBarButtonItem) [toolbarItems removeObject: _splitViewBarButtonItem]; 
+        if(splitViewBarButtonItem) [toolbarItems insertObject:splitViewBarButtonItem atIndex:0]; 
+        self.toolbar.items = toolbarItems; 
+        _splitViewBarButtonItem = splitViewBarButtonItem; 
+    }
+                                
+    
+}
+
 
 
 - (void)setCurrProgram:(NSArray *)currProgram
@@ -44,8 +64,16 @@
     
     [self.graphView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pinch:)]]; 
     
-    //implement pan
+    /* target: again the view will be the object that reacts/deals with the gesture
+     */ 
 
+    [self.graphView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pan:)]];
+    
+    UITapGestureRecognizer *tripleTap = [[UITapGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(handleTaps:)];
+    
+    tripleTap.numberOfTapsRequired = 3;
+    
+    [self.graphView addGestureRecognizer:tripleTap]; 
 }
 
 
@@ -54,6 +82,11 @@
     NSDictionary *xValue = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:xCoordinate], @"x", nil];
     return [RpnBrain runProgram:self.currProgram usingVariableValues: xValue]; 
     
+}
+
+-(BOOL)hasProgram
+{
+    return (self.currProgram != nil); 
 }
 
 -(double)startOfRange

@@ -9,6 +9,7 @@
 #import "RpnViewController.h"
 #import "RpnBrain.h" 
 #import "GraphViewController.h"
+#import "SplitViewBarButtonItemPresenter.h"
 
 @interface RpnViewController() 
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
@@ -33,6 +34,83 @@
 - (RpnBrain*)brain { 
     if(_brain == nil) _brain = [[RpnBrain alloc] init]; 
     return _brain; 
+}
+
+-(GraphViewController *)splitViewGraphViewController
+{
+    /* this will get me the graphViewController if I'm in a splitview
+     * otherwise it will return nil
+     */ 
+    
+    
+    id graphViewController = [self.splitViewController.viewControllers lastObject]; 
+    if(![graphViewController isKindOfClass:[graphViewController class]]) 
+    {
+        graphViewController = nil; 
+    }
+    return graphViewController; 
+}
+
+
+-(id <SplitViewBarButtonItemPresenter>)isSplitViewBarButtonItemPresenter
+{
+    /* I'm going to get my detail view if the detail view
+     * is able to show a barButton (i.e. is a BarButtonItemPresenter)
+     */ 
+    id detailVC = [self.splitViewController.viewControllers lastObject]; 
+    
+    /* IMPORTANT. this is how you check whether an object conforms to a
+     *  protocol
+     */ 
+    
+    if([detailVC conformsToProtocol:@protocol(SplitViewBarButtonItemPresenter)])
+    {
+        detailVC = nil; 
+    }
+    return detailVC;     
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib]; 
+    self.splitViewController.delegate = self; 
+}
+
+-(BOOL)splitViewController:(UISplitViewController *)svc 
+  shouldHideViewController:(UIViewController *)vc 
+             inOrientation:(UIInterfaceOrientation)orientation
+{
+    return [self isSplitViewBarButtonItemPresenter] ? UIInterfaceOrientationIsPortrait(orientation) : NO; 
+}
+
+-(void)splitViewController:(UISplitViewController *)svc 
+    willHideViewController:(UIViewController *)aViewController 
+         withBarButtonItem:(UIBarButtonItem *)barButtonItem 
+      forPopoverController:(UIPopoverController *)pc
+{
+    /* I'm going to hide the master controller
+     * please take this button and put it somewhere on screen
+     * so I can get it back 
+     */ 
+    
+    //assume that the title of the controller is good title for the button
+    
+    barButtonItem.title = self.title; 
+    
+    //
+    [self isSplitViewBarButtonItemPresenter].splitViewBarButtonItem = barButtonItem; 
+    
+}
+
+
+-(void)splitViewController:(UISplitViewController *)svc 
+    willShowViewController:(UIViewController *)aViewController 
+ invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    /* here we want to take away the button 
+     */ 
+    [self isSplitViewBarButtonItemPresenter].splitViewBarButtonItem = nil; 
+    
 }
 
 
@@ -135,8 +213,28 @@
     }
 }
 
+
+
 - (IBAction)graph {
-    [self performSegueWithIdentifier:@"ShowGraph" sender:self]; 
+    /* get the graphViewController from the splitview
+     * send the graphViewController a message updating the program
+     */ 
+    
+    if([self splitViewGraphViewController]) 
+    {
+        [[self splitViewGraphViewController] setCurrProgram:self.brain.program]; 
+    }
+    else 
+    {
+        /* sender is usually the button that's causing the segue
+         * in this case it's the view controller itself.
+         */ 
+        
+        [self performSegueWithIdentifier:@"ShowGraph" sender:self];
+    }
+
+    
+    
     
 }
 

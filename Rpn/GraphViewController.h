@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SplitViewBarButtonItemPresenter.h"
 
-@interface GraphViewController : UIViewController
+@interface GraphViewController : UIViewController <SplitViewBarButtonItemPresenter> 
 
 /* The model for the GraphView is a program
  * We make the property part of the public API

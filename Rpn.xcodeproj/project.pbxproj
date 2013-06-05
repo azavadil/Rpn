@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99464B05175E564300D23765 /* iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99464B04175E564300D23765 /* iPad.storyboard */; };
 		99B09D23175BFF5500ECDD04 /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99B09D22175BFF5500ECDD04 /* GraphView.m */; };
 		99B09D2C175C34C500ECDD04 /* GraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99B09D2B175C34C500ECDD04 /* GraphViewController.m */; };
 		99DCB9531756BAF800BCCBFA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99DCB9521756BAF800BCCBFA /* UIKit.framework */; };
@@ -15,13 +16,15 @@
 		99DCB95D1756BAF800BCCBFA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99DCB95B1756BAF800BCCBFA /* InfoPlist.strings */; };
 		99DCB95F1756BAF800BCCBFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 99DCB95E1756BAF800BCCBFA /* main.m */; };
 		99DCB9631756BAF800BCCBFA /* RpnAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 99DCB9621756BAF800BCCBFA /* RpnAppDelegate.m */; };
-		99DCB9661756BAF800BCCBFA /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99DCB9641756BAF800BCCBFA /* MainStoryboard.storyboard */; };
+		99DCB9661756BAF800BCCBFA /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99DCB9641756BAF800BCCBFA /* iPhone.storyboard */; };
 		99DCB9691756BAF800BCCBFA /* RpnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99DCB9681756BAF800BCCBFA /* RpnViewController.m */; };
 		99DCB9711756CCF700BCCBFA /* RpnBrain.m in Sources */ = {isa = PBXBuildFile; fileRef = 99DCB9701756CCF700BCCBFA /* RpnBrain.m */; };
 		99FFF76F175CE6AA00F2DD25 /* AxesDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FFF76E175CE6AA00F2DD25 /* AxesDrawer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		99464B04175E564300D23765 /* iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPad.storyboard; sourceTree = "<group>"; };
+		99464B0C175F7EE600D23765 /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
 		99B09D21175BFF5500ECDD04 /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
 		99B09D22175BFF5500ECDD04 /* GraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
 		99B09D2A175C34C500ECDD04 /* GraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphViewController.h; sourceTree = "<group>"; };
@@ -36,7 +39,7 @@
 		99DCB9601756BAF800BCCBFA /* Rpn-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rpn-Prefix.pch"; sourceTree = "<group>"; };
 		99DCB9611756BAF800BCCBFA /* RpnAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RpnAppDelegate.h; sourceTree = "<group>"; };
 		99DCB9621756BAF800BCCBFA /* RpnAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RpnAppDelegate.m; sourceTree = "<group>"; };
-		99DCB9651756BAF800BCCBFA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		99DCB9651756BAF800BCCBFA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone.storyboard; sourceTree = "<group>"; };
 		99DCB9671756BAF800BCCBFA /* RpnViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RpnViewController.h; sourceTree = "<group>"; };
 		99DCB9681756BAF800BCCBFA /* RpnViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RpnViewController.m; sourceTree = "<group>"; };
 		99DCB96F1756CCF700BCCBFA /* RpnBrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RpnBrain.h; sourceTree = "<group>"; };
@@ -89,11 +92,13 @@
 		99DCB9581756BAF800BCCBFA /* Rpn */ = {
 			isa = PBXGroup;
 			children = (
+				99464B04175E564300D23765 /* iPad.storyboard */,
+				99464B0C175F7EE600D23765 /* SplitViewBarButtonItemPresenter.h */,
 				99DCB9611756BAF800BCCBFA /* RpnAppDelegate.h */,
 				99FFF76D175CE6AA00F2DD25 /* AxesDrawer.h */,
 				99FFF76E175CE6AA00F2DD25 /* AxesDrawer.m */,
 				99DCB9621756BAF800BCCBFA /* RpnAppDelegate.m */,
-				99DCB9641756BAF800BCCBFA /* MainStoryboard.storyboard */,
+				99DCB9641756BAF800BCCBFA /* iPhone.storyboard */,
 				99DCB96F1756CCF700BCCBFA /* RpnBrain.h */,
 				99DCB9701756CCF700BCCBFA /* RpnBrain.m */,
 				99DCB9671756BAF800BCCBFA /* RpnViewController.h */,
@@ -169,7 +174,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				99DCB95D1756BAF800BCCBFA /* InfoPlist.strings in Resources */,
-				99DCB9661756BAF800BCCBFA /* MainStoryboard.storyboard in Resources */,
+				99DCB9661756BAF800BCCBFA /* iPhone.storyboard in Resources */,
+				99464B05175E564300D23765 /* iPad.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,12 +207,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		99DCB9641756BAF800BCCBFA /* MainStoryboard.storyboard */ = {
+		99DCB9641756BAF800BCCBFA /* iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				99DCB9651756BAF800BCCBFA /* en */,
 			);
-			name = MainStoryboard.storyboard;
+			name = iPhone.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -263,7 +269,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Rpn/Rpn-Prefix.pch";
 				INFOPLIST_FILE = "Rpn/Rpn-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -274,7 +282,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Rpn/Rpn-Prefix.pch";
 				INFOPLIST_FILE = "Rpn/Rpn-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

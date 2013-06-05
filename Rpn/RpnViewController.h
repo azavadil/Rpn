@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RpnViewController : UIViewController
+@interface RpnViewController : UIViewController <UISplitViewControllerDelegate>
 
 //IBOutlet is typedef to 'nothing'
 @property (weak, nonatomic) IBOutlet UILabel *display;
