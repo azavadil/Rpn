@@ -236,7 +236,9 @@
 }
 
 
-/* CLASS METHODS */
+/** CLASS METHODS 
+ * --------------
+ */
 
 
 
@@ -280,7 +282,7 @@
     
     return [self runProgram: program]; 
 }
-  
+    
 + (NSSet *)variablesUsedInProgram:(id) program
 { 
     NSMutableSet *result = [[NSMutableSet alloc] initWithCapacity:3]; 
