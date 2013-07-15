@@ -27,10 +27,26 @@
 @synthesize splitViewBarButtonItem = _splitViewBarButtonItem; 
 @synthesize toolbar = _toolbar; 
 
+
+/** Instance method: setSplitViewBarButtonItem
+ * -------------------------------------------
+ * setSplitViewBarButtonItem adds a button to the detailVC. This is part of 
+ * the implementation of the functionality that hides/shows the master portion
+ * of a splitView controller (the graphViewController is the detail portion). 
+ * We connection between the toolbar and the controller is established in the storyboard. 
+ * 
+ */ 
+
 -(void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
 {
+    // check that the new button is different from the existing button
     if(_splitViewBarButtonItem != splitViewBarButtonItem)
     {
+        /* get the current toolbar array and make a mutableCopy (we're going to be modifying the array)
+         * if the _splitViewBarButtonItem isn't nil, remove it from the array
+         * put the new button in the array on the left hand side (i.e. at index:0)
+         * set self.toolbar.items to the mutated array
+         */
         NSMutableArray *toolbarItems = [self.toolbar.items mutableCopy]; 
         if(_splitViewBarButtonItem) [toolbarItems removeObject: _splitViewBarButtonItem]; 
         if(splitViewBarButtonItem) [toolbarItems insertObject:splitViewBarButtonItem atIndex:0]; 
