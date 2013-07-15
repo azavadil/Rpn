@@ -324,6 +324,13 @@
     
 
 
+/** Instance method: undoPressed
+ * ------------------------------
+ * target for the undo button being pressed. If there are values in the display then 
+ * we delete the last value. If there are no values left in the display then we 
+ * get the result of running the current program and update the display
+ */
+
 - (IBAction)undoPressed {
     if(self.userIsInTheMiddleOfEnteringANumber){ 
         if([self.display.text length] > 1) {
@@ -337,6 +344,13 @@
         [self.brain removeLastItem];
     }
 }
+
+
+
+/** Instance method: prepareForSegue
+ * ---------------------------------
+ * self-documenting
+ */ 
 
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -372,10 +386,6 @@
         
         [self performSegueWithIdentifier:@"ShowGraph" sender:self];
     }
-
-    
-    
-    
 }
 
 @end

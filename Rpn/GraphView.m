@@ -21,6 +21,10 @@
 
 #define DEFAULT_SCALE 0.90
 
+/** Instance method: scale
+ * -----------------------
+ * getter for _scale instance variable  
+ */
 
 -(CGFloat)scale
 {
@@ -34,16 +38,32 @@
     }
 }
 
+
+
+/** Instance method: getScale
+ * --------------------------
+ * self-documenting implementation
+ */ 
+
 -(void)setScale:(CGFloat)scale
 {
     //before triggering exspensive redraw, check that scale changed
     if(_scale != scale)
     {
         _scale = scale; 
+        // have the screen redraw each time the scale is set
         [self setNeedsDisplay]; 
     }
     
 }
+
+
+
+/** Instance method: panAdjustment
+ * -------------------------------
+ * getter for panAdjustment. If there is no panAdjustment we just return 
+ * point (0,0)
+ */ 
 
 -(CGPoint)panAdjustment
 {
@@ -57,6 +77,16 @@
     }
 }
 
+
+
+/** Instance method: setPanAdjustment
+ * ----------------------------------
+ * setter for _panAdjustment instance variable. We check that the argument 
+ * passed to them method is different than the current value of the instance 
+ * variable to avoid the computation expense of redrawing the display if 
+ * possible
+ */ 
+
 -(void)setPanAdjustment:(CGPoint)panAdjustment
 {
     //before triggering exspensive redraw, check that scale changed
@@ -69,20 +99,28 @@
     
 }
 
+
+
+/** Instance method: incrementPanAdjustment
+ * ----------------------------------------
+ * incrementPanAdjustment takes a CGPoint and increments the 
+ * _panAdjustment by the x,y values in the point
+ */ 
+
 - (void)incrementPanAdjustment:(CGPoint)panAdjustment
 {
-    //before triggering exspensive redraw, check that scale changed
-    if(_panAdjustment.x != panAdjustment.x || 
-       _panAdjustment.y != panAdjustment.y)
-    {
-        _panAdjustment.x += panAdjustment.x;
-        _panAdjustment.y += panAdjustment.y; 
-        [self setNeedsDisplay]; 
-    }
+    _panAdjustment.x += panAdjustment.x;
+    _panAdjustment.y += panAdjustment.y; 
+    [self setNeedsDisplay]; 
 
-    
 }
 
+
+
+/** Instance method: pinch
+ * -----------------------
+ * self-documenting
+ */
 
 -(void)pinch:(UIPinchGestureRecognizer *)gesture
 {
@@ -93,6 +131,13 @@
         gesture.scale = 1;           // reset gestures scale to 1 (so future changes are incremental, not cumulative)
     }
 }
+
+
+/** Instance method: pan
+ * ---------------------
+ * pan handles the pan gesture recognizer. We reset the gesture to
+ * zero after we handle the gesture
+ */ 
 
 -(void)pan:(UIPanGestureRecognizer *)gesture
 {
@@ -105,6 +150,13 @@
     }
 }
 
+
+
+/** Instance method: handleTaps
+ * ----------------------------
+ * handleTaps 
+ */ 
+
 -(void)handleTaps:(UITapGestureRecognizer *)gesture
 {
     
@@ -116,17 +168,38 @@
 }
 
 
+
+/** Instance method: setup
+ * -----------------------
+ * setup ensures that content mode is always called. initWithFrame isn't 
+ * always called when the view controller comes out of a storyboard so 
+ * so put the code to set contentMode in setup and then put a call to 
+ * setup in both awakeFromNib and initWitFrame
+ */
+
 - (void)setup
 { 
     //code required to force view to redraw
     self.contentMode = UIViewContentModeRedraw; 
 } 
 
+
+
+/** Instance method: awakeFromNib
+ * ------------------------------
+ * self-documenting
+ */ 
+
 -(void)awakeFromNib 
 {
     [self setup]; 
 }
 
+
+/** Instance method: initWithFrame
+ * -------------------------------
+ * self-documenting
+ */ 
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -138,6 +211,10 @@
 }
 
 
+/** Instance method: drawRect
+ * --------------------------
+ * drawRect draws the graph on screen
+ */
 
 - (void)drawRect:(CGRect)rect
 {
@@ -180,6 +257,7 @@
         CGFloat pointsPerHashmark = size / (CGFloat)rangeDistance; 
         [AxesDrawer drawAxesInRect:drawingArea originAtPoint:midPoint scale:pointsPerHashmark];
     
+        // note the GraphViewController is set as the datasource (i.e. same as delegate) and we use that to get the y coordinate
         CGContextBeginPath(context); 
         CGContextMoveToPoint(context, midPoint.x - size/2 , midPoint.y - pointsPerHashmark*[self.dataSource yCoordinateForGraphView:startOfRange]); //datasource    
     
