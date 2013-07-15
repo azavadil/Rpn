@@ -58,6 +58,10 @@
 }
 
 
+/** Instance method: currProgram 
+ * -----------------------------
+ * currProgram is the setter for the _currProgram instance variable
+ */
 
 - (void)setCurrProgram:(NSArray *)currProgram
 {
@@ -67,6 +71,14 @@
     [self.graphView setNeedsDisplay];
     
 }
+
+
+
+/** Instance method: setGraphView
+ * ------------------------------
+ * setGraphView is the setter for the _graphView instance variable. 
+ * setGraphView adds the gesture recognizers that we use
+ */ 
 
 - (void)setGraphView:(GraphView *)graphView
 {
@@ -93,6 +105,13 @@
 }
 
 
+/** Instance method: yCoordinateForGraphView
+ * -----------------------------------------
+ * yCoordinateForGraphView takes a double and returns a double. yCoordinateForGraphView
+ * takes as input the x coordinate and calls the calculator brain to return the corresponding
+ * y coordinate
+ */ 
+
 -(double)yCoordinateForGraphView:(double)xCoordinate
 {
     NSDictionary *xValue = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:xCoordinate], @"x", nil];
@@ -100,10 +119,24 @@
     
 }
 
+
+/**Instance method: hasProgram
+ * ---------------------------
+ * self-documenting
+ */ 
+
 -(BOOL)hasProgram
 {
     return (self.currProgram != nil); 
 }
+
+
+/** Instance method: startOfRange
+ * ------------------------------
+ * startOfRange returns the start of the range to be graphed. 
+ * If we're graphing a line the default range is -10 to 10
+ * If we're graphing sin or cos, the default range is -2π to 2π
+ */
 
 -(double)startOfRange
 {
@@ -119,6 +152,13 @@
     }
     return result; 
 }
+
+
+/** Instance method: totalRangeDistance
+ * ------------------------------------
+ * totalRangeDistance returns the length of the range
+ * that we are graphing over
+ */
 
 -(double)totalRangeDistance
 {
